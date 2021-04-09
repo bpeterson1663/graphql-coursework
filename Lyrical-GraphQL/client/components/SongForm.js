@@ -1,10 +1,26 @@
 import React, { useState } from 'react'
+import { gql, useMutation } from '@apollo/client'
+import { fetchSongs } from '../queries/fetchSongs'
+const mutation = gql`
+    mutation addSong($title: String!){
+        addSong(title: $title){
+            id,
+            title
+        }
+    }
+`
 
-const SongForm = ({handleOnSubmit}) => {
+const SongForm = () => {
     const [songTitle, setSongTitle] = useState('')
+    const [addSongTitle, { data, error, loading}] = useMutation(mutation)
+
     const submitHandler = (event) => {
         event.preventDefault()
-        handleOnSubmit(songTitle)
+        addSongTitle({ 
+            variables: { title: songTitle},
+            refetchQueries: [{query: fetchSongs }] 
+        });
+        setSongTitle('')
     }
     return (
         <div>

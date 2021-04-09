@@ -1,26 +1,16 @@
 import React from 'react'
-import { useQuery, gql } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import SongForm from './SongForm'
-const query = gql`
-   { 
-       songs{
-         id,
-         title
-       }
-    }
-`
+import { fetchSongs } from '../queries/fetchSongs'
+
 
  const SongList = () => {
-    const { loading, error, data } = useQuery(query)
+    const { loading, error, data } = useQuery(fetchSongs)
     if(loading) return 'Loading....'
-    const createNewSong = (songTitle) => {
-        console.log("song title ", songTitle)
-    }
     return (
         <div>
-            <SongForm handleOnSubmit={createNewSong} />
-            Song List
-            {data.songs.map(song => <div key={song.id}>{song.title}</div>)}
+            <SongForm />
+            {data?.songs.map(song => <div key={song.id}>{song.title}</div>)}
         </div>
     )
 }
